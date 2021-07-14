@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mystudydemo.mapper.VehPassRecMapper">
+    <sql id="Base_Column_List">
+        xlh
+        ,sbbh,fxbh,hphm,hpzl,clbh,gcsj,clsd,cwkc,hpys,cllx,hdlqsj,hdcxsj,
+        cltp1,cltp2,cltp3,cltp5,cltp6,cltp7,wfxw,dcxs,xcxs,wfbj,sjscsj,cdbh,
+       ddbh,ddms,ptjdbh,sczt,xsfx,fxms,clpp,zjccfs,csys,byzd1,byzd2,byzd3
+    </sql>
+
+    <select id="getVehPass" resultType="com.example.mystudydemo.entity.VehPassRec">
+--         select * from veh_passrec_zk where xlh>#{xlh} and rownum &lt;=50 order by xlh desc
+select * from veh_passrec where xlh>#{xlh} order by xlh desc limit 50
+    </select>
+
+    <insert id="addItem" parameterType="java.util.List">
+        insert into veh_passrec
+        (<include refid="Base_Column_List"></include>)
+        values
+        <foreach collection="list" item="item" index= "index" separator =",">
+            (
+            #{item.id},
+            #{item.rentalInfoId},
+            #{item.itemName},
+            #{item.number},
+            #{item.remark}
+            )
+        </foreach>
+
+    </insert>
+</mapper>

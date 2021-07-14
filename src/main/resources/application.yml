@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    dynamic:
+      p6spy: true
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url:  jdbc:mysql://127.0.0.1:3306/babytun?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+          username: root
+          password: startRain999
+        mysql:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3307/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#          username: start
+#          使用localhost时可以使用root账户，使用ip等远程连接使用start
+          username: root
+          password: Mysql8@crazy
+
+  redis:
+    host: localhost
+
+  thymeleaf:
+    prefix: classpath:/templates/
+
+server:
+  port: 9999
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.example.studydemo.entity
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      # 删除前
+      logic-not-delete-value: 1
+      # 删除后
+      logic-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full

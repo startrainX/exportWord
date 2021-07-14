@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mystudydemo.mapper.TrafficMapper">
+    
+    <select id="selectRoadTop20" resultType="com.example.mystudydemo.entity.bean.TrafficBean">
+        SELECT
+            c.`name` as areaName,
+            b.`name` as roadName,
+            round( AVG( a.avg_speed ), 2 ) AS avgSpeed,
+            round( avg( a.traffic_index ), 2 ) AS avgIndex
+        FROM
+            `jhjjzd_road_index_day` a
+                LEFT JOIN jhjjzd_road_info b ON a.roadid = b.roadid
+                LEFT JOIN jhjjzd_area_info c ON b.areaid = c.areaid
+        WHERE
+            data_time BETWEEN #{startTime} and #{endTime}
+          AND peak_type = #{type}
+        GROUP BY
+            a.roadid ORDER BY avgIndex desc limit 20
+    </select>
+    
+    <select id="selectRoadPercent" resultType="com.example.mystudydemo.entity.bean.TrafficBean">
+        SELECT
+            c.`name` AS areaName,
+            count(
+                    DISTINCT ( a.roadid )) as count
+        FROM
+            `jhjjzd_road_index_day` a
+            LEFT JOIN jhjjzd_road_info b ON a.roadid = b.roadid
+            LEFT JOIN jhjjzd_area_info c ON b.areaid = c.areaid
+        WHERE
+            data_time BETWEEN #{startTime} and #{endTime}
+          AND a.congest_mile != '0.0000'
+          AND peak_type = #{type}
+          and c.type=1
+        GROUP BY
+            a.areaid
+    </select>
+    
+    <select id="selectAllTpiEveryDay" resultType="com.example.mystudydemo.entity.bean.TrafficBean">
+        SELECT
+            DATE_FORMAT( data_time, '%Y-%m-%d' ) AS time,
+	        round( AVG( traffic_index ), 2 ) AS avgIndex,
+	        round( avg( avg_speed ), 1 ) AS avgSpeed
+        FROM
+            jhjjzd_traffic_index
+        WHERE
+            data_time BETWEEN #{startTime} and #{endTime}
+        GROUP BY
+            DATE_FORMAT(
+            data_time,
+            '%Y%m%d')
+    </select>
+    
+    <select id="selectRegionTpiEveryDay" resultType="com.example.mystudydemo.entity.bean.TrafficBean">
+        SELECT
+            DATE_FORMAT( data_time, '%Y-%m-%d' ) AS time,
+	        c.NAME as areaName,
+	        round( AVG( a.traffic_index ), 2 ) AS avgIndex
+        FROM
+            jhjjzd_area_index_day a
+            LEFT JOIN jhjjzd_area_info c ON a.areaid = c.areaid
+        WHERE
+            data_time BETWEEN #{startTime} and #{endTime}
+          and c.type=1
+        GROUP BY
+            DATE_FORMAT( data_time, '%Y%m%d' ),
+            a.areaid
+    </select>
+    
+    <select id="selectRegionTpiCompare" resultType="com.example.mystudydemo.entity.bean.TrafficBean">
+        SELECT
+            DATE_FORMAT( data_time, '%m' ) AS time,
+	        c.NAME as areaName,
+	        round( AVG( a.traffic_index ), 2 ) AS avgIndex
+        FROM
+            jhjjzd_area_index_day a
+            LEFT JOIN jhjjzd_area_info c ON a.areaid = c.areaid
+        WHERE
+            data_time BETWEEN #{startTime} and #{endTime}
+          and a.peak_type = #{type}
+          and c.type = 1
+        GROUP BY
+            a.areaid UNION
+        SELECT
+            DATE_FORMAT( data_time, '%m' ) AS time,
+	        c.NAME as areaName,
+	        round( AVG( a.traffic_index ), 2 ) AS avgIndex
+        FROM
+            jhjjzd_area_index_day a
+            LEFT JOIN jhjjzd_area_info c ON a.areaid = c.areaid
+        WHERE
+            data_time BETWEEN #{preStartTime} and #{preEndTime}
+          and a.peak_type = #{type}
+          and c.type=1
+        GROUP BY
+            DATE_FORMAT( data_time, '%Y%m' ),
+            a.areaid
+
+    </select>
+</mapper>

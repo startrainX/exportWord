@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mystudydemo.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.mystudydemo.entity.User">
+        <result column="id" property="id" />
+        <result column="userName" property="userName" />
+        <result column="passWord" property="passWord" />
+        <result column="realName" property="realName" />
+        <result column="creatTime" property="creatTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+    <insert id="add" parameterType="com.example.mystudydemo.entity.User">
+        insert into user(userName,passWord,realName,creatTime,updateTime) values (#{userName},#{passWord},#{realName},#{creatTime},#{updateTime})
+    </insert>
+
+    <update id="update" parameterType="com.example.mystudydemo.entity.User">
+        update user set updateTime = #{updateTime}
+        <if test="userName!= null">, userName = #{userName}</if>
+        <if test="passWord!= null">, passWord = #{passWord}</if>
+        <if test="realName!= null">, realName = #{realName}</if>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="selectById" resultType="com.example.mystudydemo.entity.User">
+        select * from user where id = #{id}
+    </select>
+    <select id="getAll" resultType="com.example.mystudydemo.entity.User">
+        select * from user
+    </select>
+    <select id="getDataPage" resultType="com.example.mystudydemo.entity.User">
+        select * from user
+    </select>
+
+    <select id="testForEach" resultType="com.example.mystudydemo.entity.VehPassRec" parameterType="com.example.mystudydemo.entity.qo.UserQO">
+        select * from veh_passrec
+        <where>
+            <if test="qo.sbbh != '' and qo.sbbh != null">
+                and sbbh = #{qo.sbbh}
+            </if>
+            <if test="qo.fxbh != '' and qo.fxbh != null">
+                <foreach collection="qo.fxbh" item="item" index="index" open=" and (" close=")" separator=" or ">
+                    fxbh = #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+</mapper>
