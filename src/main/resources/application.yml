@@ -1,26 +1,10 @@
 spring:
-  datasource:
-    dynamic:
-      p6spy: true
-      datasource:
-        master:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url:  jdbc:mysql://127.0.0.1:3306/babytun?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-          username: root
-          password: startRain999
-        mysql:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3307/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-#          username: start
-#          使用localhost时可以使用root账户，使用ip等远程连接使用start
-          username: root
-          password: Mysql8@crazy
-
-  redis:
-    host: localhost
-
-  thymeleaf:
-    prefix: classpath:/templates/
+  application:
+    name: evmp-schedule-extract
+  profiles:
+    active: prod
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 9999
