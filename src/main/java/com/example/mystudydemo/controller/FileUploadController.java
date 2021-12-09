@@ -1,6 +1,8 @@
 package com.example.mystudydemo.controller;
 
 import com.example.mystudydemo.entity.ResultEntity;
+import com.example.mystudydemo.enums.FileEnum;
+import com.example.mystudydemo.utils.export.FileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,6 +11,8 @@ import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,5 +60,26 @@ public class FileUploadController {
             log.error(e.toString(), e);
         }
         return ResultEntity.error("上传失败！");
+    }
+
+    @GetMapping("/downFile")
+    @ApiOperation(value = "下载文件")
+    public void downFile(HttpServletRequest request, HttpServletResponse response, Integer type) {
+        try {
+            // 枚举根据类型确定文件名
+            String fileName= FileEnum.forEach_FileEnum(type).getFileName();
+            if (!FileUtils.isValidFilename(fileName)) {
+            }
+            String realFileName = fileName.substring(fileName.indexOf("_") + 1);
+            // 文件具体位置
+            String filePath = "/opt/upload/file/" + fileName;
+
+            response.setCharacterEncoding("iso-8859-1");
+            response.setContentType("multipart/form-data");
+            response.setHeader("Content-Disposition",
+                    "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, realFileName));
+            FileUtils.writeBytes(filePath, response.getOutputStream());
+        } catch (Exception e) {
+        }
     }
 }

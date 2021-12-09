@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mystudydemo.mapper.UpmsPersonImportMapper">
+
+
+    <insert id="insertPerson" parameterType="com.example.mystudydemo.entity.po.ImportPersonPO">
+        <selectKey keyProperty="po.person" resultType="java.lang.Long" order="AFTER">
+            select id as person from ho_person order by id desc limit 1
+        </selectKey>
+        insert into ho_person (code,name,telephone) values (#{po.jybh},#{po.xm},#{po.sjh})
+    </insert>
+    <insert id="insertDeptPerson">
+        insert into ho_department_person(person_id,department_id) values (#{po.person},#{po.ssbm})
+    </insert>
+    <insert id="insertUser">
+        insert into ho_user(username,password,person_id,expired,disabled,locked,deleted,personname)
+            values (#{po.xm},#{po.password},#{po.person},0,0,0,0,#{po.xm})
+    </insert>
+
+    <select id="getDepts" resultType="java.util.Map">
+        select code,name from ho_department
+    </select>
+</mapper>

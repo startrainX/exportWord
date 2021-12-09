@@ -2,10 +2,7 @@ package com.example.mystudydemo.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mystudydemo.entity.ResultEntity;
 import com.example.mystudydemo.entity.User;
 import com.example.mystudydemo.entity.VehPassRec;
@@ -15,7 +12,6 @@ import com.example.mystudydemo.enums.ExceptionEnum;
 import com.example.mystudydemo.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +24,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import static cn.afterturn.easypoi.excel.entity.enmus.CellValueType.Date;
 
 /**
  * @author zsp
